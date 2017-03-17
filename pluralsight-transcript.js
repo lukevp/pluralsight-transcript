@@ -18,8 +18,8 @@ function hasClass(item, className) {
 }
 
 
-var activeModule = -1;
-var activeClip = -1;
+var currentModule = -1;
+var currentClip = -1;
 // First find all <section> items under #modules
 var children = document.getElementsByClassName("modules")[0].children;
 
@@ -32,8 +32,8 @@ for (var i = 0; i < children.length; i++) {
         var clipList = currentChild.children[1].children;
         for (var j = 0; j < clipList.length; j++) {
             if (hasClass(clipList[j], "selected")) {
-                activeModule = i;
-                activeClip = j;
+                currentModule = i;
+                currentClip = j;
             }
         }
     }
