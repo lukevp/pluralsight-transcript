@@ -4,7 +4,7 @@
   "name": "Pluralsight-Transcript",
   "version": "1.0",
 
-  "description": "Displays contents of transcript with live highlighting on Pluralsight videos.",
+  "description": "Creates a popup window with transcript along with live highlighting on Pluralsight videos",
 
   "permissions": [
       "activeTab",
@@ -17,12 +17,6 @@
   "background": {
     "scripts": ["show-button.js"]
   },
-  "content_scripts": [
-    {
-      "matches": ["*://app.pluralsight.com/player*"],
-      "js": ["jquery-3.1.1.min.js", "pluralsight-transcript.js"]
-    }
-  ],
 
   "page_action": {
     "browser_style": true,
@@ -30,7 +24,7 @@
       "19": "button/pageAction-19.png",
       "38": "button/pageAction-38.png"
     },
-    "default_title": "Show Transcript?"
+    "default_title": "Show Transcript"
   }
 
 
