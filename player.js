@@ -74,7 +74,7 @@ function updateData()
     }
     // Set up a recursive loop to constantly check to see if any of our watched values
     // have changed since the last time, and if so, notify the background script.
-    window.setTimeout(updateData, 100);
+    window.setTimeout(updateData, 500);
 }
 // Invoke updateData immediately upon definition so we don't have any lag time
 // from the first time the button is clicked.

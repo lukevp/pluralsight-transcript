@@ -15,7 +15,7 @@
     "96": "icons/icon-96.png"
   },
   "background": {
-    "scripts": ["show-button.js"]
+    "scripts": ["background.js"]
   },
 
   "page_action": {

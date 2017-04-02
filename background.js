@@ -55,7 +55,7 @@ function showTranscript(tab) {
     if (active_callbacks.indexOf(tab.id) == -1)
     {
         active_callbacks.push(tab.id);
-        browser.tabs.executeScript(tab.id, { file: "/pluralsight-transcript.js" });
+        browser.tabs.executeScript(tab.id, { file: "/player.js" });
     }
 }
 
