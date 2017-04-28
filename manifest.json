@@ -1,25 +1,25 @@
 {
-  "manifest_version": 2,
-  "name": "Pluralsight-Transcript",
-  "version": "1.0",
-  "description": "Add a Page Action to every Pluralsight video player.  Clicking the Page Action will create a new popup window with a transcript (if available) along with live highlighting and automatic scrolling in time with the video playback.",
-  "permissions": [
-      "activeTab",
-      "tabs"
-  ],
-  "icons": {
-    "48": "icons/icon-48.png",
-    "96": "icons/icon-96.png"
-  },
-  "background": {
-    "scripts": ["background.js"]
-  },
-  "page_action": {
-    "browser_style": true,
-    "default_icon": {
-      "19": "button/pageAction-19.png",
-      "38": "button/pageAction-38.png"
+    "manifest_version": 2,
+    "name": "Pluralsight-Transcript",
+    "version": "1.0",
+    "description": "Add a Page Action to every Pluralsight video player.  Clicking the Page Action will create a new popup window with a transcript (if available) along with live highlighting and automatic scrolling in time with the video playback.",
+    "permissions": [
+        "activeTab",
+        "tabs"
+    ],
+    "icons": {
+        "48": "icons/icon-48.png",
+        "96": "icons/icon-96.png"
     },
-    "default_title": "Show Transcript"
-  }
+    "background": {
+        "scripts": [ "background.js" ]
+    },
+    "page_action": {
+        "browser_style": true,
+        "default_icon": {
+            "19": "button/pageAction-19.png",
+            "38": "button/pageAction-38.png"
+        },
+        "default_title": "Show Transcript"
+    }
 }

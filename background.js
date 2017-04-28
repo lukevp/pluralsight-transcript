@@ -9,15 +9,13 @@ var playerRegex = /^https?\:\/\/app\.pluralsight\.com\/player\?.*course=([^&]*)(
   Also define a second callback that will call updateTranscriptTIme
 */
 function updateTranscriptTime(m) {
-    if (m.source == "content")
-    {
+    if (m.source == "content") {
         console.log("In background script, received message from content script");
         console.log("MODULE: " + m.module);
         console.log("CLIP: " + m.clip);
         console.log("TIME: " + m.time);
     }
-    else if (m.source == "transcript")
-    {
+    else if (m.source == "transcript") {
         console.log("In background script, received message from transcript");
         console.log("TabID: " + m.tabid);
         console.log("Title: " + m.title);
@@ -25,11 +23,11 @@ function updateTranscriptTime(m) {
 }
 
 function onCreated(windowInfo, tab, active_course) {
-  console.log(`Created window: ${windowInfo.id}`);
+    console.log(`Created window: ${windowInfo.id}`);
 }
 
 function onError(error) {
-  console.log(`Error: ${error}`);
+    console.log(`Error: ${error}`);
 }
 
 /* Define callback function for onclick of Page Action that will launch transcript
@@ -46,11 +44,11 @@ function showTranscript(tab) {
     transcriptURL += "?course=" + active_course;
     browser.tabs.executeScript(tab.id, { file: "content.js" });
     var creating = browser.windows.create(
-    {
-      type : "popup",
-      url : transcriptURL
-    });
-    creating.then(function(windowInfo) { onCreated(windowInfo, tab, active_course); }, onError);
+        {
+            type: "popup",
+            url: transcriptURL
+        });
+    creating.then(function (windowInfo) { onCreated(windowInfo, tab, active_course); }, onError);
 }
 /* Register an event handler for the pageClick event to open a pop-up window
    with the active course's transcript. */
