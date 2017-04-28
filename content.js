@@ -107,29 +107,21 @@ function parseQuery(url) {
 function updateData()
 {
     var data_changed = false;
-    // First find all <section> items under #modules
-    var children = document.getElementsByClassName("modules")[0].children;
-    // Then check all children to see what clip is selected.
-    for (var i = 0; i < children.length; i++) {
-
-        var currentChild = children[i];
-        var clipList = currentChild.children[1].children;
-        for (var j = 0; j < clipList.length; j++) {
-            if (hasClass(clipList[j], "selected")) {
-                if (currentModule != i || currentClip != j)
-                {
-                    console.log("Module and clip changed.");
-                    console.log(currentModule);
-                    console.log(i);
-                    console.log(currentClip);
-                    console.log(j);
-                    data_changed = true;
-                }
-                currentModule = i;
-                currentClip = j;
-                break;
-            }
-        }
+    
+    var urlParams = parseQuery(window.location.href);
+    var nameComponents = urlParams["name"].split('-');
+    var targetModule = nameComponents[nameComponents.length - 1].substring(1);
+    var targetClip = urlParams["clip"];
+    if (currentModule != targetModule || currentClip != targetClip)
+    {
+        console.log("Module and clip changed.");
+        console.log(currentModule);
+        console.log(targetModule);
+        console.log(currentClip);
+        console.log(targetClip);
+        data_changed = true;
+        currentModule = targetModule;
+        currentClip = targetClip;
     }
     var newTime = document.getElementsByTagName('video')[0].currentTime;
     if (currentTime != newTime)
@@ -145,7 +137,7 @@ function updateData()
     dataChanged();
     // Set up a recursive loop to constantly check to see if any of our watched values
     // have changed since the last time, and if so, notify the background script.
-    window.setTimeout(updateData, 500);
+    window.setTimeout(updateData, 250);
 }
 // Invoke updateData immediately upon definition so we don't have any lag time
 // from the first time the button is clicked.

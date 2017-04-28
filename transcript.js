@@ -1,6 +1,7 @@
 //var myPort = browser.runtime.connect({name:"port-from-transcript"});
 var title = "";
 var currentTab = -1;
+var currentModuleAndClip = "";
 var transcriptData = undefined;
 
 /* From: http://stackoverflow.com/questions/2090551/parse-query-string-in-javascript & heavily modified */
@@ -38,18 +39,42 @@ function renderTranscript()
     {
         var module = transcriptData.modules[moduleindex];
         var moduleroot = "module"+moduleindex
-        text += "<div id='"+moduleroot+"' class='module'><h1>"+module.title+"</h1>";
+        text += "<div id='" + moduleroot + "' class='module'><h1>" + module.title + "</h1>";
         for (var clipindex = 0; clipindex < module.clips.length; clipindex++)
         {
             var clip = module.clips[clipindex];
             var cliproot = moduleroot+"clip"+clipindex;
-            text += "<div id='"+cliproot+"' class='clip'><h2>"+clip.title+"</h2>";
+            text += "<div id='" + cliproot + "' class='clip'><h2>" + clip.title + "</h2><div class='clip-body'><p>";
+            var sentenceCount = 0;
             for (var segmentindex = 0; segmentindex < clip.segments.length; segmentindex++)
             {
                 var segment = clip.segments[segmentindex];
-                text += "<span id='"+cliproot+"segment"+segmentindex+"' class='segment'>"+segment.text+"</span>&nbsp;";
+                /* Count the # of sentences & add a break every 5 sentences. */
+                var newText = "";
+                var endlocation = 0;
+                var foundIndex = 0;
+                while (endlocation >= 0)
+                {
+                    var endlocation = segment.text.search(/\.(\s|$)/);
+                    if (endlocation != -1)
+                    {
+                        newText += segment.text.substring(0, endlocation+1);
+                        sentenceCount += 1;
+                        if (sentenceCount >= 5)
+                        {
+                            newText += "</span></p><p><span id='" + cliproot + "segment" + segmentindex +"-1' class='segment'>";
+                            sentenceCount = 0;
+                        }
+                        segment.text = segment.text.substring(endlocation+1);
+                    }
+                    else
+                    {
+                        newText += segment.text;
+                    }
+                }
+                text += "<span id='"+cliproot+"segment"+segmentindex+"' class='segment'>"+newText+"</span>&nbsp;";
             }
-            text += "</div>";
+            text += "</p></div></div>";
         }
         text += "</div>";
     }
@@ -64,17 +89,29 @@ function updateTranscript(module, clip, time)
        selected[i].classList.remove('selected');
     }
     document.getElementById('module'+module).classList.add('selected');
-    document.getElementById('module'+module+'clip'+clip).classList.add('selected');
+    document.getElementById('module' + module + 'clip' + clip).classList.add('selected');
+
+    // If clip/module has changed, scroll to new clip.
+    var newModuleAndClip = 'm' + module + 'c' + clip;
+    if (currentModuleAndClip != newModuleAndClip)
+    {
+        window.scrollTo(0, document.getElementById('module' + module + 'clip' + clip).offsetTop);
+        currentModuleAndClip = newModuleAndClip;
+    }
     // Find the clip we're on and get our list of segments.
     var segments = transcriptData.modules[module].clips[clip].segments;
-    for (var i = 0; i < segments.length; i++)
+    // Select the active segment. Default to the last segment.
+    var activeSegment = -1;//segments.length;
+    for (var i = segments.length - 1; i >= 0; i--)
     {
-        if (time <= segments[i].displayTime)
+        if (time >= segments[i].displayTime)
         {
-            document.getElementById('module'+module+'clip'+clip+'segment'+(i-1)).classList.add('selected');
+            activeSegment = i;
             break;
         }
     }
+    document.getElementById('module' + module + 'clip' + clip + 'segment' + (activeSegment)).classList.add('selected');
+    document.getElementById('module' + module + 'clip' + clip + 'segment' + (activeSegment) + "-1").classList.add('selected');
 }
 
 function handleMessage(request, sender, sendResponse) {
