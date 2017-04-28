@@ -1,22 +1,6 @@
-// http://app.pluralsight.com/player.html?course=ionic2-angular2-typescript-mobile-apps&author=steve-michelotti&name=ionic2-angular2-typescript-mobile-apps-m0&clip=0&mode=live
-
-//var myPort = browser.runtime.connect({name:"port-from-cs"});
-/*
-myPort.postMessage({greeting: "hello from content script"});
-
-myPort.onMessage.addListener(function(m) {
-  console.log("In content script, received message from background script: ");
-  console.log(m.greeting);
-});
-document.body.addEventListener("click", function() {
-  myPort.postMessage({greeting: "they clicked the page!"});
-});
-
-*/
 var currentModule = -1;
 var currentClip = -1;
 var currentTime = -1;
-
 var transcriptData = undefined;
 
 /* Get JSON from pluralsight and parse it into DOM elements.
@@ -47,8 +31,6 @@ function renderTranscript(course)
       // There was a connection error of some sort
     };
 }
-
-
 
 urlParams = parseQuery(window.location.href);
 var course = urlParams["course"];
@@ -103,11 +85,10 @@ function parseQuery(url) {
    return query;
 }
 
-
 function updateData()
 {
     var data_changed = false;
-    
+
     var urlParams = parseQuery(window.location.href);
     var nameComponents = urlParams["name"].split('-');
     var targetModule = nameComponents[nameComponents.length - 1].substring(1);
@@ -142,12 +123,3 @@ function updateData()
 // Invoke updateData immediately upon definition so we don't have any lag time
 // from the first time the button is clicked.
 updateData();
-
-/*
-(function() {
-    var script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.src = 'alert("hi")';
-    document.body.appendChild(script);
-})();
-*/

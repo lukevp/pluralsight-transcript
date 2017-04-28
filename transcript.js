@@ -1,4 +1,3 @@
-//var myPort = browser.runtime.connect({name:"port-from-transcript"});
 var title = "";
 var currentTab = -1;
 var currentModuleAndClip = "";
@@ -20,9 +19,6 @@ function parseQuery(url) {
    return query;
 }
 
-/*function updateTranscriptTime(m) {
-  console.log("In transcript script, received message from background script");
-}*/
 function updateTitle(tab)
 {
     currentTab = tab.id;
@@ -78,7 +74,6 @@ function renderTranscript()
         }
         text += "</div>";
     }
-    //var text = JSON.stringify(transcriptData);
     document.body.innerHTML = text;
 }
 
@@ -90,7 +85,6 @@ function updateTranscript(module, clip, time)
     }
     document.getElementById('module'+module).classList.add('selected');
     document.getElementById('module' + module + 'clip' + clip).classList.add('selected');
-
     // If clip/module has changed, scroll to new clip.
     var newModuleAndClip = 'm' + module + 'c' + clip;
     if (currentModuleAndClip != newModuleAndClip)
@@ -123,36 +117,6 @@ function handleMessage(request, sender, sendResponse) {
             renderTranscript();
         }
         updateTranscript(request.module, request.clip, request.time);
-        /*
-        console.log("TODO: Update transcript to: ");
-        console.log();
-        console.log(request.module);
-        console.log(request.clip);
-        console.log(request.time);*/
     }
-
-  //sendResponse({response: "Response from background script"});
 }
 browser.runtime.onMessage.addListener(handleMessage);
-
-
-
-
-//browser.runtime.onConnect.addListener(function(p) { p.onMessage.addListener(updateTranscriptTime); });
-
-//var myId = tab.id;
-/*
-function dataChanged() {
-    if (currentTab != -1)
-    {
-        myPort.postMessage(
-        {
-            source: "transcript",
-            tabid: currentTab,
-            title: title
-        });
-    }
-    window.setTimeout(dataChanged, 1000);
-}
-dataChanged();
-*/
