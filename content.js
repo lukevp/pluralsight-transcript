@@ -55,7 +55,7 @@ function sendData() {
             clip: currentClip,
             time: currentTime,
             transcript: transcriptData
-        });
+        }).then(function() {} , function() {});
     }
     else {
         browser.runtime.sendMessage({
@@ -63,7 +63,7 @@ function sendData() {
             module: currentModule,
             clip: currentClip,
             time: currentTime
-        });
+        }).then(function() {} , function() {});
     }
 }
 
