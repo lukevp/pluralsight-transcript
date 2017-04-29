@@ -42,7 +42,6 @@ function showTranscript(tab) {
     // What if can't find transcript but course exists?
     var transcriptURL = "transcript.html";
     transcriptURL += "?course=" + active_course;
-    browser.tabs.executeScript(tab.id, { file: "content.js" });
     var creating = browser.windows.create(
         {
             type: "popup",
@@ -57,6 +56,23 @@ browser.pageAction.onClicked.addListener(showTranscript);
    whenever the user is at a pluralsight player page. */
 browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     if (tab.url.match(playerRegex)) {
-        browser.pageAction.show(tab.id);
+        // This is a current bug in polyfill and the pageAction.show wrapper does not work properly in chrome
+        // so we need to manually check for presence of chrome
+        if (chrome !== undefined) {
+            chrome.pageAction.show(tab.id);
+        }
+        else {
+            browser.pageAction.show(tab.id);
+        }
+    }
+    else {
+        // This is a current bug in polyfill and the pageAction.show wrapper does not work properly in chrome
+        // so we need to manually check for presence of chrome
+        if (chrome !== undefined) {
+            chrome.pageAction.hide(tab.id);
+        }
+        else {
+            browser.pageAction.hide(tab.id);
+        }
     }
 });
