@@ -44,18 +44,18 @@ function hasClass(item, className) {
     return false;
 }
 
-var dataChangedCalls = 0;
-function dataChanged() {
-    dataChangedCalls += 1;
+var sendDataCalls = 0;
+function sendData() {
+    sendDataCalls += 1;
     // Try to send the whole transcript data every couple seconds.
-    if (dataChangedCalls % 4 == 0) {
+    if (sendDataCalls % 8 == 0) {
         browser.runtime.sendMessage({
             course: course,
             module: currentModule,
             clip: currentClip,
             time: currentTime,
             transcript: transcriptData
-        });
+        }).then(function() {} , function() {});
     }
     else {
         browser.runtime.sendMessage({
@@ -63,7 +63,7 @@ function dataChanged() {
             module: currentModule,
             clip: currentClip,
             time: currentTime
-        });
+        }).then(function() {} , function() {});
     }
 }
 
@@ -83,8 +83,14 @@ function parseQuery(url) {
 }
 
 function updateData() {
-    var data_changed = false;
-
+    // Set up a recursive loop to constantly check to see if any of our watched values
+    // have changed since the last time, and if so, notify the background script.
+    window.setTimeout(updateData, 250);
+    var videoPlayer = document.getElementsByTagName('video')[0];
+    if (videoPlayer == undefined) {
+        return;
+    }
+    var newTime = videoPlayer.currentTime;
     var urlParams = parseQuery(window.location.href);
     var nameComponents = urlParams["name"].split('-');
     var targetModule = nameComponents[nameComponents.length - 1].substring(1);
@@ -95,24 +101,11 @@ function updateData() {
         console.log(targetModule);
         console.log(currentClip);
         console.log(targetClip);
-        data_changed = true;
         currentModule = targetModule;
         currentClip = targetClip;
     }
-    var newTime = document.getElementsByTagName('video')[0].currentTime;
-    if (currentTime != newTime) {
-        data_changed = true;
-    }
     currentTime = newTime;
-    // For debugging so a message is always sent even on static page.
-    /*if (data_changed)
-    {
-        dataChanged();
-    }*/
-    dataChanged();
-    // Set up a recursive loop to constantly check to see if any of our watched values
-    // have changed since the last time, and if so, notify the background script.
-    window.setTimeout(updateData, 250);
+    sendData();
 }
 // Invoke updateData immediately upon definition so we don't have any lag time
 // from the first time the button is clicked.

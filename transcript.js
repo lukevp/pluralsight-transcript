@@ -2,6 +2,7 @@ var title = "";
 var currentTab = -1;
 var currentModuleAndClip = "";
 var transcriptData = undefined;
+var rendered = false;
 
 /* From: http://stackoverflow.com/questions/2090551/parse-query-string-in-javascript & heavily modified */
 function parseQuery(url) {
@@ -65,9 +66,13 @@ function renderTranscript() {
         text += "</div>";
     }
     document.body.innerHTML = text;
+    rendered = true;
 }
 
 function updateTranscript(module, clip, time) {
+    if (!rendered) {
+        return;
+    }
     var selected = document.querySelectorAll('.selected');
     for (var i = 0; i < selected.length; i++) {
         selected[i].classList.remove('selected');
@@ -83,15 +88,24 @@ function updateTranscript(module, clip, time) {
     // Find the clip we're on and get our list of segments.
     var segments = transcriptData.modules[module].clips[clip].segments;
     // Select the active segment. Default to the last segment.
-    var activeSegment = -1;//segments.length;
+    var activeSegment = -1;
     for (var i = segments.length - 1; i >= 0; i--) {
         if (time >= segments[i].displayTime) {
             activeSegment = i;
             break;
         }
     }
+    var lowestBeforeScrolling = (window.pageYOffset + window.innerHeight) - 150;
+    var endOfScreen = (window.pageYOffset + window.innerHeight);
+    var segmentTop = document.getElementById('module' + module + 'clip' + clip + 'segment' + (activeSegment)).offsetTop;
+    if (lowestBeforeScrolling < segmentTop && segmentTop < endOfScreen) {
+        window.scrollTo(0, segmentTop - window.innerHeight + 155);
+    }
     document.getElementById('module' + module + 'clip' + clip + 'segment' + (activeSegment)).classList.add('selected');
-    document.getElementById('module' + module + 'clip' + clip + 'segment' + (activeSegment) + "-1").classList.add('selected');
+    var subSegment = document.getElementById('module' + module + 'clip' + clip + 'segment' + (activeSegment) + "-1");
+    if (subSegment !== null) {
+        subSegment.classList.add('selected');
+    }
 }
 
 function handleMessage(request, sender, sendResponse) {

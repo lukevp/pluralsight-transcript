@@ -12,8 +12,15 @@
         "96": "icons/icon-96.png"
     },
     "background": {
-        "scripts": [ "background.js" ]
+        "scripts": [ "browser-polyfill.min.js", "background.js" ]
     },
+    "content_scripts": [{
+    "js": [
+      "browser-polyfill.min.js",
+      "content.js"
+  ],
+  "matches": ["*://app.pluralsight.com/player?*"]
+    }],
     "page_action": {
         "browser_style": true,
         "default_icon": {
