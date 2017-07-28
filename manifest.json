@@ -2,7 +2,7 @@
     "manifest_version": 2,
     "name": "Pluralsight Transcript",
     "short_name": "pstranscript",
-    "version": "1.0",
+    "version": "1.1",
     "description": "Add a transcript popup along with live highlighting and automatic scrolling in time with the video playback.",
     "permissions": [
         "activeTab",

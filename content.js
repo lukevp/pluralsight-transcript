@@ -93,7 +93,16 @@ function updateData() {
     var newTime = videoPlayer.currentTime;
     var urlParams = parseQuery(window.location.href);
     var nameComponents = urlParams["name"].split('-');
-    var targetModule = nameComponents[nameComponents.length - 1].substring(1);
+	var moduleRegex = /^[mM](\d+)$/g;
+	var targetModule = "m0";
+	for (var i = 0; i < nameComponents.length; i++)
+	{
+		if (nameComponents[i].match(moduleRegex))
+		{
+			targetModule = moduleRegex.exec(nameComponents[i])[1];
+			break;
+		}
+	}
     var targetClip = urlParams["clip"];
     if (currentModule != targetModule || currentClip != targetClip) {
         console.log("Module and clip changed.");
